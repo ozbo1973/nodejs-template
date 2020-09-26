@@ -17,6 +17,8 @@ test("Should fetch user profile", async () => {
     .set("Authorization", `Bearer ${token}`)
     .send()
     .expect(200);
+
+  expect(result.body.user).not.toBeNull();
 });
 
 test("Should Update user profile", async () => {
@@ -49,7 +51,7 @@ test("Should Delete user profile", async () => {
 });
 
 /* Avatars */
-test("Should upload Avatar", async () => {
+test("Should upload Avatar and fetch users avatar", async () => {
   const { userOne } = user1;
   await request(app)
     .post(`${baseURL}/me/avatar`)
@@ -59,18 +61,15 @@ test("Should upload Avatar", async () => {
 
   const user = await User.findById(userOne._id);
   expect(user.avatar).toEqual(expect.any(Buffer));
+
+  await request(app).get(`${baseURL}/${user._id}/avatar`).send().expect(200);
 });
 
 test("Should Delete user Avatar", async () => {
+  const { userOne } = user1;
   const result = await request(app)
     .delete(`${baseURL}/me/avatar`)
-    .send()
-    .expect(200);
-});
-
-test("Should Fetch user Avatar", async () => {
-  const result = await request(app)
-    .get(`${baseURL}/12548/avatar`)
+    .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
     .send()
     .expect(200);
 });

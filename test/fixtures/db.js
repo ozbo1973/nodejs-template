@@ -13,6 +13,7 @@ const userOne = {
   email: " jttester1@testexample.biz",
   password: "ABC123#2",
   tokens: [{ token: jwtToken(userOneId) }],
+  avatar: "",
 };
 
 const userTwoId = new mongoose.Types.ObjectId();

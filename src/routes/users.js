@@ -21,7 +21,7 @@ const uploadAvatar = multer({
 /* profile routes */
 router.get("/me", isAuth, (req, res) => {
   try {
-    res.status(200).send("My Profile");
+    res.status(200).send(req.user);
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
@@ -53,8 +53,11 @@ router.patch("/me", isAuth, async (req, res) => {
 
 router.delete("/me", isAuth, async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.body._id);
-
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).send({ message: "User not found." });
+    }
+    await user.remove();
     res.status(200).send({ user });
   } catch (error) {
     res.status(500).send({ error: error.message });
@@ -75,7 +78,7 @@ router.post(
 
       req.user.avatar = buffer;
       await req.user.save();
-      res.send();
+      res.send({ message: "Avatar uploaded" });
     } catch (error) {
       res.status(500).send({ error: error.message });
     }
@@ -85,18 +88,31 @@ router.post(
   }
 );
 
-router.delete("/me/avatar", (req, res) => {
+router.delete("/me/avatar", isAuth, async (req, res) => {
   try {
-    res.status(200).send("My Deleted Avatar");
+    req.user.avatar = undefined;
+    await req.user.save();
+
+    res.status(200).send({ message: "Avatar deleted." });
   } catch (error) {
+    console.log(error.message);
     res.status(500).send({ error: error.message });
   }
 });
 
-router.get("/:id/avatar", (req, res) => {
+router.get("/:id/avatar", async (req, res) => {
   try {
-    res.status(200).send("My Shown Avatar");
+    const user = await User.findById(req.params.id);
+
+    if (!user || !user.avatar) {
+      throw new Error();
+    }
+
+    res.set("Content-Type", "image/png");
+
+    res.status(200).send(user.avatar);
   } catch (error) {
+    console.log(error.message);
     res.status(500).send({ error: error.message });
   }
 });
