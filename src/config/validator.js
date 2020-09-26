@@ -12,7 +12,7 @@ module.exports = {
     return validator.isLength(username, len);
   },
   validPassword(val) {
-    const len = { min: 8, max: 30 };
+    const len = { min: 8 };
     const password = validator.escape(val);
     return validator.isLength(password, len);
   },

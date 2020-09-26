@@ -21,7 +21,13 @@ test("Should signup new user, with encrypted password", async () => {
     .expect(201);
 
   const user = await User.findById(result.body.user._id);
+
+  expect(user).toMatchObject({
+    username: newUser.username,
+    email: newUser.email,
+  });
   expect(user.password).not.toBe(newUser.password);
+  expect(user.tokens.length).toBeGreaterThan(0);
 });
 
 test("Should not signup user due to no data sent", async () => {
