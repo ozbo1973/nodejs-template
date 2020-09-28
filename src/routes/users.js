@@ -2,11 +2,12 @@
 const express = require("express");
 const multer = require("multer");
 const User = require("../models/user");
-const { updatesAllowed } = require("../middlewares/helpers");
-const isAuth = require("../middlewares/isAuth");
+const { helpers, auth, hasKeys } = require("../middlewares");
 const sharp = require("sharp");
 
 const router = express.Router();
+const { updatesAllowed } = helpers;
+const { requireAuth } = auth;
 
 const uploadAvatar = multer({
   limits: { fileSize: 2000000 },
@@ -19,7 +20,7 @@ const uploadAvatar = multer({
 });
 
 /* profile routes */
-router.get("/me", isAuth, (req, res) => {
+router.get("/me", [requireAuth], (req, res) => {
   try {
     res.status(200).send(req.user);
   } catch (error) {
@@ -27,12 +28,7 @@ router.get("/me", isAuth, (req, res) => {
   }
 });
 
-router.patch("/me", isAuth, async (req, res) => {
-  const keys = Object.keys(req.body);
-  if (keys.length === 0) {
-    return res.status(400).send({ error: "Invalid update" });
-  }
-
+router.patch("/me", [requireAuth, hasKeys], async (req, res) => {
   const allowedFields = ["name", "email", "password", "username"];
   const { isAllowed, updates } = updatesAllowed(req.body, allowedFields);
 
@@ -51,7 +47,7 @@ router.patch("/me", isAuth, async (req, res) => {
   }
 });
 
-router.delete("/me", isAuth, async (req, res) => {
+router.delete("/me", [requireAuth], async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user) {
@@ -67,7 +63,7 @@ router.delete("/me", isAuth, async (req, res) => {
 /* Avatar routes */
 router.post(
   "/me/avatar",
-  isAuth,
+  [requireAuth, hasKeys],
   uploadAvatar.single("avatar"),
   async (req, res) => {
     try {
@@ -88,7 +84,7 @@ router.post(
   }
 );
 
-router.delete("/me/avatar", isAuth, async (req, res) => {
+router.delete("/me/avatar", [requireAuth], async (req, res) => {
   try {
     req.user.avatar = undefined;
     await req.user.save();
