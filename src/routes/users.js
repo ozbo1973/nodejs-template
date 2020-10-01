@@ -20,7 +20,7 @@ const uploadAvatar = multer({
 });
 
 /* profile routes */
-router.get("/me", [requireAuth], (req, res) => {
+router.get("/me", requireAuth, (req, res) => {
   try {
     res.status(200).send(req.user);
   } catch (error) {
@@ -28,7 +28,7 @@ router.get("/me", [requireAuth], (req, res) => {
   }
 });
 
-router.patch("/me", [requireAuth, hasKeys], async (req, res) => {
+router.patch("/me", requireAuth, hasKeys, async (req, res) => {
   const allowedFields = ["name", "email", "password", "username"];
   const { isAllowed, updates } = updatesAllowed(req.body, allowedFields);
 
@@ -47,7 +47,7 @@ router.patch("/me", [requireAuth, hasKeys], async (req, res) => {
   }
 });
 
-router.delete("/me", [requireAuth], async (req, res) => {
+router.delete("/me", requireAuth, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user) {
@@ -63,8 +63,9 @@ router.delete("/me", [requireAuth], async (req, res) => {
 /* Avatar routes */
 router.post(
   "/me/avatar",
-  [requireAuth, hasKeys],
   uploadAvatar.single("avatar"),
+  requireAuth,
+  hasKeys,
   async (req, res) => {
     try {
       const buffer = await sharp(req.file.buffer, { failOnError: false })
@@ -76,6 +77,7 @@ router.post(
       await req.user.save();
       res.send({ message: "Avatar uploaded" });
     } catch (error) {
+      console.log(error.message);
       res.status(500).send({ error: error.message });
     }
   },

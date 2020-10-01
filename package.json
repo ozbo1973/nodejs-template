@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "env-cmd -f ./src/config/test.env jest --watch --runInBand --detectOpenHandles",
+    "test-one": "env-cmd -f ./src/config/test.env jest avatar.test.js --runInBand --detectOpenHandles",
     "start": "node src/index.js",
     "db": "mongod --dbpath=c:\\Users\\Owner\\mongodb-data",
     "dev": "env-cmd -f ./src/config/dev.env nodemon src/index.js"
