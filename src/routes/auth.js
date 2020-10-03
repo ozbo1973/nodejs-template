@@ -1,48 +1,47 @@
 const express = require("express");
 const User = require("../models/user");
-const { hasKeys, auth, helpers } = require("../middlewares");
+const { hasKeys, handleValidationErrors, auth } = require("../middlewares");
 
 const router = express.Router();
-const { hasValidationErrors } = helpers;
 const { requireAuth } = auth;
 const { validateSignup, validateLogin } = auth.validators;
 
-router.post("/signup", [hasKeys, validateSignup], async (req, res) => {
-  const { message } = hasValidationErrors(req);
-  if (message) {
-    return res.status(401).send({ message });
+router.post(
+  "/signup",
+  [hasKeys, validateSignup],
+  handleValidationErrors,
+  async (req, res) => {
+    try {
+      const user = new User(req.body);
+      await user.save();
+
+      const token = await user.getAuthToken();
+
+      res.status(201).send({ user, token });
+    } catch (error) {
+      res.status(500).send();
+    }
   }
+);
 
-  try {
-    const user = new User(req.body);
-    await user.save();
+router.post(
+  "/login",
+  [hasKeys, validateLogin],
+  handleValidationErrors,
+  async (req, res) => {
+    try {
+      const user = req.user;
+      const token = await user.getAuthToken();
 
-    const token = await user.getAuthToken();
-
-    res.status(201).send({ user, token });
-  } catch (error) {
-    res.status(500).send();
+      res.status(200).send({ user, token });
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).send(error.message);
+    }
   }
-});
+);
 
-router.post("/login", [hasKeys, validateLogin], async (req, res) => {
-  const { message } = hasValidationErrors(req);
-  if (message) {
-    return res.status(401).send({ message });
-  }
-
-  try {
-    const user = req.user;
-    const token = await user.getAuthToken();
-
-    res.status(200).send({ user, token });
-  } catch (error) {
-    console.log(error.message);
-    res.status(500).send(error.message);
-  }
-});
-
-router.post("/logout", [requireAuth], async (req, res) => {
+router.post("/logout", requireAuth, async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter(
       (token) => token.token !== req.token

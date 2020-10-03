@@ -86,7 +86,7 @@ router.post(
   }
 );
 
-router.delete("/me/avatar", [requireAuth], async (req, res) => {
+router.delete("/me/avatar", requireAuth, async (req, res) => {
   try {
     req.user.avatar = undefined;
     await req.user.save();
