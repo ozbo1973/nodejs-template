@@ -62,23 +62,6 @@ userSchema.methods.getAuthToken = async function () {
   }
 };
 
-/* Static to find credentials to login */
-// userSchema.statics.findByCredentials = async (email, givenPassword) => {
-//   try {
-//     const user = await User.findOne({ email });
-//     if (!user) {
-//       throw new Error("Unauthorized");
-//     }
-
-//     const isMatch = await bcrypt.compare(givenPassword, user.password);
-//     if (!isMatch) {
-//       throw new Error("Unauthorized");
-//     }
-
-//     return user;
-//   } catch (error) {}
-// };
-
 /* pre save to hash password */
 userSchema.pre("save", async function (next) {
   const user = this;
