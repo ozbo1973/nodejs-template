@@ -26,7 +26,7 @@ test("Should signup new user, with encrypted password", async () => {
     username: newUser.username,
     email: newUser.email,
   });
-  expect(user.password).not.toBe(newUser.password);
+  expect(user.hashed_password).not.toBe(newUser.password);
   expect(user.tokens.length).toBeGreaterThan(0);
 });
 

@@ -10,7 +10,7 @@ const userOne = {
   _id: userOneId,
   name: "John Tester1",
   username: "JTTester1",
-  email: " jttester1@testexample.biz",
+  email: "jttester1@testexample.biz",
   password: "ABC123#2",
   tokens: [{ token: jwtToken(userOneId) }],
   avatar: "",
@@ -21,7 +21,7 @@ const userTwo = {
   _id: userTwoId,
   name: "John Tester2",
   username: "JTTester2",
-  email: " jttester2@testexample.biz",
+  email: "jttester2@testexample.biz",
   password: "ABC123#2sew",
   tokens: [{ token: jwtToken(userTwoId) }],
 };

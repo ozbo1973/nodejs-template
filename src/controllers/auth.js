@@ -9,6 +9,7 @@ exports.signup = async (req, res) => {
 
     res.status(201).send({ user, token });
   } catch (error) {
+    console.log(error.message);
     res.status(500).send();
   }
 };

@@ -51,9 +51,13 @@ module.exports = {
         options: async (val, { req }) => {
           const { email } = req.body;
           const user = await User.findOne({ email });
-          const isMatch = await bcrypt.compare(val, user.password);
+          if (!user) {
+            throw new Error("Unauthorized");
+          }
 
-          if (!user || !isMatch) {
+          const isMatch = await user.isPasswordMatch(val);
+
+          if (!isMatch) {
             throw new Error("Unauthorized.");
           }
           req.user = user;

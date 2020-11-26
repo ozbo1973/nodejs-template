@@ -10,6 +10,7 @@ beforeEach(setUpDB);
 
 test("Should login existing user", async () => {
   const { email, password } = user1.userOne;
+
   const result = await request(app)
     .post(`${baseURL}/login`)
     .send({ email, password })
