@@ -1,12 +1,11 @@
 const { checkSchema } = require("express-validator");
-const bcrypt = require("bcryptjs");
-const { emailConfig, usernameConfig, passwordConfig } = require("./config");
+const fieldConfig = require("./config");
 const User = require("../../../models/user");
 
 module.exports = {
   validateSignup: checkSchema({
     email: {
-      ...emailConfig,
+      ...fieldConfig.email,
       custom: {
         options: async (val) => {
           const user = await User.findOne({ email: val });
@@ -18,7 +17,7 @@ module.exports = {
       },
     },
     username: {
-      ...usernameConfig,
+      ...fieldConfig.username,
       isLength: {
         errorMessage: "Username must be between 5 and 25 characters",
         options: { min: 5, max: 25 },
@@ -34,7 +33,7 @@ module.exports = {
       },
     },
     password: {
-      ...passwordConfig,
+      ...fieldConfig.password,
       isLength: {
         errorMessage: "Password must be at least 6 chars and no more than 25",
         options: { min: 6, max: 25 },
@@ -43,10 +42,10 @@ module.exports = {
   }),
   validateLogin: checkSchema({
     email: {
-      ...emailConfig,
+      ...fieldConfig.email,
     },
     password: {
-      ...passwordConfig,
+      ...fieldConfig.password,
       custom: {
         options: async (val, { req }) => {
           const { email } = req.body;

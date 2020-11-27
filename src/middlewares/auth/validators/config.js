@@ -5,7 +5,7 @@ const baseConfig = {
   escape: true,
 };
 
-const emailConfig = {
+const email = {
   ...baseConfig,
   normalizeEmail: true,
   notEmpty: {
@@ -16,14 +16,14 @@ const emailConfig = {
   },
 };
 
-const usernameConfig = {
+const username = {
   ...baseConfig,
   notEmpty: {
     errorMessage: requiredFieldMsg("Email"),
   },
 };
 
-const passwordConfig = {
+const password = {
   ...baseConfig,
   notEmpty: {
     errorMessage: requiredFieldMsg("Password"),
@@ -31,7 +31,7 @@ const passwordConfig = {
 };
 
 module.exports = {
-  emailConfig,
-  usernameConfig,
-  passwordConfig,
+  email,
+  username,
+  password,
 };

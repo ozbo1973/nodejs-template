@@ -1,4 +1,5 @@
 const express = require("express");
+const morgan = require("morgan");
 const path = require("path");
 
 /* database require */
@@ -10,6 +11,7 @@ const pubDir = path.join(__dirname, "../public");
 /* middlewares */
 app.use(express.json());
 app.use(express.static(pubDir));
+app.use(morgan("dev"));
 
 /* routes */
 app.use("/api/users", require("./routes/users"));
