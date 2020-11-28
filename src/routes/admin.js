@@ -2,8 +2,8 @@ const express = require("express");
 const { auth, admin, handleValidationErrors } = require("../middlewares");
 
 const router = express.Router();
-const { requireAuth, isAdmin } = auth;
-const { findUserProfile } = admin;
+const { requireAuth } = auth;
+const { findUserProfile, isAdmin } = admin;
 const { getProfile } = require("../controllers/admin");
 
 /* profile routes */

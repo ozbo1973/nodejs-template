@@ -16,6 +16,7 @@ const handleValidationErrors = (req, res, next) => {
   let errMgs = [];
 
   if (errors.length > 0) {
+    console.log(errMgs);
     errMgs = errors.map((err) => ({ param: err.param, msg: err.msg }));
     return res.status(401).send({ message: [...errMgs] });
   }
