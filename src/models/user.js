@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema(
     salt: { type: String },
     avatar: { type: Buffer },
     tokens: [{ token: { type: String, required: true } }],
+    admin: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
@@ -79,7 +83,6 @@ userSchema.methods = {
     }
 
     return buff.toString("hex");
-    // `${buff.toString("hex")}.${user.salt}`;
   },
 
   /* Get the Token for authentication */

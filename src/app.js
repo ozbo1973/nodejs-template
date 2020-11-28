@@ -14,8 +14,9 @@ app.use(express.static(pubDir));
 app.use(morgan("dev"));
 
 /* routes */
-app.use("/api/users", require("./routes/users"));
 app.use("/api/auth", require("./routes/auth"));
+app.use("/api/admin", require("./routes/admin"));
+app.use("/api/users", require("./routes/users"));
 
 app.get("/", (req, res) => {
   res.status(200).send("Express Server Home Page");

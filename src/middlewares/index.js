@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const helpers = require("./helpers");
 const auth = require("./auth");
+const admin = require("./admin");
 
 const hasKeys = (req, res, next) => {
   const keys = Object.keys(req.body);
@@ -26,4 +27,5 @@ module.exports = {
   handleValidationErrors,
   helpers,
   auth,
+  admin,
 };

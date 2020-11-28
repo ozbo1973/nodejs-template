@@ -33,7 +33,7 @@ exports.logout = async (req, res) => {
     );
 
     await req.user.save();
-
+    req.profile = null;
     res.status(200).send({ message: "Logged out" });
   } catch (error) {
     res.status(500).send(error.message);

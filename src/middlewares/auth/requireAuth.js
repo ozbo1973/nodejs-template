@@ -11,6 +11,8 @@ module.exports = async (req, res, next) => {
     if (!user) {
       return res.status(401).send({ message: "Please Authenticate." });
     }
+
+    req.isAdmin = user.admin === 1;
     req.user = user;
     req.token = token;
     next();
